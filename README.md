@@ -295,3 +295,13 @@ Ember.run.later(dialog, dialog.accept, 5000);
 ## How to Run Unit Tests
 
 Extension hasn't any tests
+
+# Debugging
+
+`bundle exec rake site:preview` - build site preview
+
+`grunt build` - build libs
+
+`grunt build && cp dist/ember.dialog.min.js site/js/ember.dialog.min.js`
+
+`grunt serve` - build libs and preview for debugging

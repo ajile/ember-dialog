@@ -22,7 +22,7 @@ var broccoliTemplateBuilder = require('broccoli-template-builder');
 var templates = 'app/templates';
     templatesAMD = broccoliTemplateBuilder(templates, {
         extensions: ['hbs'],
-        outputFile: 'assets/ember.dialog.templates.js',
+        outputFile: 'ember.dialog.templates.js',
         namespace: 'Ember.TEMPLATES',
         compile: function (string) {
             var tmpl = string.replace(/\n/g, '').replace(/'/g, "\\'")
@@ -74,7 +74,7 @@ var appAndDependencies = new mergeTrees(sourceTrees, { overwrite: true })
 /////////////////////////////////////////////////////////////////////
 // SASS files build
 /////////////////////////////////////////////////////////////////////
-appCss = compileSass(sourceTrees, 'ember-dialog/app.scss', 'assets/ember.dialog.min.css', {outputStyle: 'compressed'})
+appCss = compileSass(sourceTrees, 'ember-dialog/app.scss', 'ember.dialog.min.css', {outputStyle: 'compressed'})
 
 
 
@@ -82,7 +82,7 @@ appCss = compileSass(sourceTrees, 'ember-dialog/app.scss', 'assets/ember.dialog.
 // ES6 Javascript files build
 /////////////////////////////////////////////////////////////////////
 var appJsAMD = compileES6(appAndDependencies, {
-  // loaderFile: 'loader.js',
+  loaderFile: 'loader.js',
   ignoredModules: [
     'ember/resolver'
   ],
@@ -96,7 +96,7 @@ var appJsAMD = compileES6(appAndDependencies, {
     // 'ember-resolver.js'
   ],
   wrapInEval: false,
-  outputFile: '/assets/ember.dialog.min.js'
+  outputFile: '/ember.dialog.min.js'
 })
 
 
@@ -107,14 +107,14 @@ appJsAMD = uglifyJavaScript(appJsAMD, {mangle: false, compress: false});
 
 var appJsAMD = concat(appJsAMD, {
     inputFiles: ['**/*.js'],
-    outputFile: '/assets/ember.dialog.min.js',
+    outputFile: '/ember.dialog.min.js',
     separator: '\n', // (optional, defaults to \n)
     wrapInEval: false, // (optional, defaults to false)
     wrapInFunction: false, // (optional, defaults to true)
     header: '/** Copyright Wheely Inc. 2014 **/', // (optional)
 });
 
-loader = pickFiles('vendor', {srcDir: '/', files: ['*.js'], destDir: '/assets'});
+loader = pickFiles('vendor', {srcDir: '/', files: ['*.js'], destDir: '/'});
 
 
 
@@ -123,4 +123,4 @@ loader = pickFiles('vendor', {srcDir: '/', files: ['*.js'], destDir: '/assets'})
 /////////////////////////////////////////////////////////////////////
 var html = pickFiles(app, { srcDir: '/ember-dialog', files: ['index.html'], destDir : '/'});
 
-module.exports = mergeTrees([appJsAMD, appCss, html, loader])
+module.exports = mergeTrees([appJsAMD, appCss, html, loader]);

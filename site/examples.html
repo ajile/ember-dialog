@@ -1,0 +1,181 @@
+---
+layout: main
+title:  "Examples"
+date:   2014-12-24 12:25:40
+categories: jekyll update
+---
+
+
+
+<div id="ember-app">
+    <!-- Here will be placed result of Ember rendering -->
+</div>
+
+
+
+<script type="text/javascript">
+
+    var App = window.App = Ember.Application.create({
+        rootElement: '#ember-app'
+    });
+
+    // Creating application controller
+    App.ApplicationController = Em.Controller.extend({
+
+        isShown: false,
+
+        init: function() {
+            // var manager = this.get('dialogManager');
+            // ...
+        },
+
+        actions: {
+
+            alertSimple: function() {
+                this.get('dialogManager').alert("Error message here!", this);
+            },
+
+            alertSubstrate: function() {
+                this.get('dialogManager').alert("Simple alert message", this, {
+                    title: "Alert",
+                    substrate: true
+                });
+            },
+
+            alertSubstrateNested: function() {
+                this.get('dialogManager').alert("First one", this, {
+                    title: "Alert",
+                    substrate: true
+                });
+                this.get('dialogManager').alert("Second one", this, {
+                    title: "Alert",
+                    substrate: true
+                });
+            },
+
+            alertAutoclose: function() {
+                var name = Date.now().toString();
+                var promise = this.get('dialogManager').alert("Simple alert message", this, {
+                    title: "Alert",
+                    substrate: true,
+                    name: name
+                });
+
+                Ember.run.later(this, function() {
+                    this.get('dialogManager').getDialog(name).close();
+                }, 1000);
+            },
+
+            confirmSimple: function() {
+                this.get('dialogManager').confirm("I have two buttons on a board!", this);
+            },
+
+        }
+    });
+
+</script>
+
+
+<script type="text/x-handlebars" data-template-name="application">
+
+<h2>Primitives</h2>
+
+Все примитивные примеры будут строиться на этом шаблоне
+
+{% highlight javascript %}
+var App = window.App = Ember.Application.create();
+
+// Creating application controller
+App.ApplicationController = Em.Controller.extend({
+    init: function() {
+        var manager = this.get('dialogManager');
+    }
+});
+{% endhighlight %}
+
+
+
+
+<h3>Alert</h3>
+
+<h4>Simple</h4>
+{% highlight javascript %}
+manager.alert("Error message here!");
+{% endhighlight %}
+
+{% raw %}<button {{action "alertSimple"}}>Execute</button>{% endraw %}
+
+<br />
+<br />
+
+<h4>Parametrized</h4>
+{% highlight javascript %}
+manager.alert("Simple alert message", this, {
+    title: "Alert",
+    substrate: true
+});
+{% endhighlight %}
+
+{% raw %}<button {{action "alertSubstrate"}}>Execute</button>{% endraw %}
+
+<br />
+<br />
+
+<h4>Nested</h4>
+{% highlight javascript %}
+manager.alert("First one", this, {
+    title: "Alert",
+    substrate: true
+});
+manager.alert("Second one", this, {
+    title: "Alert",
+    substrate: true
+});
+{% endhighlight %}
+
+{% raw %}<button {{action "alertSubstrateNested"}}>Execute</button>{% endraw %}
+
+<br />
+<br />
+
+<h4>Auto closing (in 1sec)</h4>
+{% highlight javascript %}
+var name = Date.now().toString();
+var promise = manager.alert("Simple alert message", this, {
+    title: "Alert",
+    substrate: true,
+    name: name
+});
+
+Ember.run.later(this, function() {
+    manager.getDialog(name).close();
+}, 1000);
+{% endhighlight %}
+
+{% raw %}<button {{action "alertAutoclose"}}>Execute</button>{% endraw %}
+
+<h3>Confirms</h3>
+
+    <br />
+    <br />
+
+<h4>Simple</h4>
+{% highlight javascript %}
+manager.confirm("I have two buttons on a board", this);
+{% endhighlight %}
+
+{% raw %}<button {{action "confirmSimple"}}>Execute</button>{% endraw %}
+
+
+
+
+
+<h2>Сложная логика</h2>
+
+<h2>Кастомные диалоговые окна</h2>
+
+<h2>Кастомизация менеджера</h2>
+
+<h2>Создание собственных типов диалоговых окон</h2>
+
+</script>
