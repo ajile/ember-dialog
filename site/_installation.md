@@ -24,7 +24,7 @@ categories: jekyll update
 <h2>Via bower</h2>
 <p>Bower is a package manager for the web. Bower makes it easy to manage dependencies in your application including Ember and Ember Dialog. To learn more about Bower visit <a href="http://bower.io/">http://bower.io/</a>.</p>
 
-<p>Adding Ember to your application with Bower is easy; simply run <code>bower install --save ember-dialog</code>. You can also add ember or ember-data to your bower.json file as follows.</p>
+<p>Adding Ember to your application with Bower is easy; simply run <code>bower install --save ember-dialog</code>. You can also add ember or ember-dialog to your bower.json file as follows.</p>
 
 {% highlight json %}
 {

@@ -2,6 +2,7 @@ node_modules/
 bower_components/
 tmp/
 
+npm-debug.log
 Gemfile.lock
 .sass-cache/
 gh-pages/
