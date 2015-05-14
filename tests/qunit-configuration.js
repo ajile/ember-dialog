@@ -2,19 +2,19 @@
   window.EmberDev = window.EmberDev || {};
 
   EmberDev.afterEach = function() {
-      if (Ember && Ember.View) {
-        var viewIds = [], id;
-        for (id in Ember.View.views) {
-          if (Ember.View.views[id] != null) {
-            viewIds.push(id);
-          }
-        }
+      // if (Ember && Ember.View) {
+      //   var viewIds = [], id;
+      //   for (id in Ember.View.views) {
+      //     if (Ember.View.views[id] != null) {
+      //       viewIds.push(id);
+      //     }
+      //   }
 
-        if (viewIds.length > 0) {
-          deepEqual(viewIds, [], "Ember.View.views should be empty");
-          Ember.View.views = [];
-        }
-      }
+      //   if (viewIds.length > 0) {
+      //     deepEqual(viewIds, [], "Ember.View.views should be empty");
+      //     Ember.View.views = [];
+      //   }
+      // }
 
       if (Ember && Ember.TEMPLATES) {
         var templateNames = [], name;
@@ -104,6 +104,7 @@
 
   var originalModule = module;
   module = function(name, origOpts) {
+    // console.log(name, origOpts);
     var opts = {};
     if (origOpts && origOpts.setup) { opts.setup = origOpts.setup; }
     opts.teardown = function() {

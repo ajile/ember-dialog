@@ -81,6 +81,20 @@ Manager = Service.extend(Ember.Evented, {
   */
   _dialogs: Ember.Object.create(),
 
+  destroy: function() {
+    Ember.ENV.LOG_DIALOG && Ember.Logger.log('%cDialogManager:%c Destroying!', 'font-weight: 900;', null);
+    var dialogList = this.get('dialogsList'), name, dialog;
+    for(var i in dialogList) {
+      if (!dialogList.hasOwnProperty(i)) { continue; }
+      if (Ember.isBlank(dialogList[i])) { continue; }
+      name = dialogList[i];
+      dialog = this.get('_dialogs').get(name);
+      this._destroyDialog(name);
+    }
+    console.info(this.get('dialogsList'));
+    return this._super.apply(this, arguments);
+  },
+
   /**
     Alert-dialog window. Contains predefined 1 button.
 
@@ -437,10 +451,20 @@ Manager = Service.extend(Ember.Evented, {
   _destroyDialog: function(name) {
     // Get the dialog from the register by income name or name of the dialog
     var dialog = Ember.typeOf(name) === 'string' ? this.getDialog(name) : name;
-    if (dialog) {
-      // Eliminate dialog
-      dialog.destroy();
-      }
+    if (!dialog) {
+      Ember.ENV.LOG_DIALOG && Ember.Logger.warn('%cDialogManager:%c The dialog named %s not found', 'font-weight: 900;', null, name);
+      return this;
+    }
+    var name = dialog.get('name');
+    Ember.ENV.LOG_DIALOG && Ember.Logger.log('%cDialogManager:%c Destroying %s', 'font-weight: 900;', null, dialog.get('name'));
+    // Eliminate dialog
+    dialog.destroy();
+    var dialogs = this.get('_dialogs');
+    delete dialogs[name];
+    var dialogsList = this.get('dialogsList');
+    this.set('dialogsList', dialogsList.without(name));
+    console.log(',,,,', this.get('_dialogs'));
+    console.log(',,,,', this.get('dialogsList'));
     return this;
   },
 

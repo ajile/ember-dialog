@@ -1,4 +1,7 @@
-// import maxZIndex from "ember-dialog/utils/highest-zindex";
+import maxZIndex from "ember-dialog/utils/highest-zindex";
+
+var computed = Ember.computed;
+var observer = Ember.observer;
 
 var Presenter;
 
@@ -28,48 +31,48 @@ Presenter = Ember.Component.extend({
     @type Boolean
     @default false
   */
-  // isActive: function() {
-  //   return this.get('name') === this.get('dialogManager.active');
-  // }.property('name', 'dialogManager.active'),
+  isActive: computed('name', 'dialogManager.active', function() {
+    return this.get('name') === this.get('dialogManager.active');
+  }),
 
-  // /**
-  //   Make dialog's z-index property biggest.
+  /**
+    Make dialog's z-index property biggest.
 
-  //   @method _visibleDidChange
-  //   @private
-  // */
-  // _visibleDidChange: function() {
+    @method _visibleDidChange
+    @private
+  */
+  _visibleDidChange: observer('isVisible', function() {
 
-  //   // Element not visible - do not recalculate z-index for it
-  //   if (!this.get('isVisible')) {
-  //     return;
-  //   }
+    // Element not visible - do not recalculate z-index for it
+    if (!this.get('isVisible')) {
+      return;
+    }
 
-  //   // Element inserting now - we should asynchronize enlargement of
-  //   // z-index css property. This method will not be executed while current
-  //   // method will not be finished.
-  //   Ember.run.later(this, function() {
+    // Element inserting now - we should asynchronize enlargement of
+    // z-index css property. This method will not be executed while current
+    // method will not be finished.
+     Ember.run.scheduleOnce('afterRender', this, function() {
 
-  //     var dialog, zindex;
+      var dialog, zindex;
 
-  //     // If z-index should be fixed - do not change it
-  //     if (!this.get("fixedZIndex")) {
-  //       // Biggest z-index
-  //       zindex = maxZIndex();
+      // If z-index should be fixed - do not change it
+      if (!this.get("fixedZIndex")) {
+        // Biggest z-index
+        zindex = maxZIndex();
 
-  //       // Component element (wrapper of dialog-element)
-  //       // Dialog element
-  //       dialog = this.$('.dialog-dialog');
+        // Component element (wrapper of dialog-element)
+        // Dialog element
+        dialog = this.$('.dialog-dialog');
 
-  //       // Set z-index biggest then biggenest
-  //       dialog.css({'z-index': zindex + 1});
-  //     }
+        // Set z-index biggest then biggenest
+        dialog.css({'z-index': zindex + 1});
+      }
 
-  //     this.focus();
+      this.focus();
 
-  //   }, 0);
+    });
 
-  // }.observes('isVisible'),
+  }),
 
   /**
     Show dialog window.

@@ -58,6 +58,17 @@ function testTree(packageName){
     srcDir: '/',
     destDir: '/' + packageName + '-jshint'
   });
+  test = es6(test, {
+    inputFiles: ['{lib,tests}/**/*.js'],
+    output: '/' + packageName + '-tests.js',
+    resolvers: [PackageResolver],
+    formatter: 'bundle'
+  });
+  // jshinted = pickFiles(jshinted, {
+  //   files: ['{lib,tests}/**/*.js'],
+  //   srcDir: '/',
+  //   destDir: '/' + packageName + '-jshint'
+  // });
   return merge([jshinted, test]);
 }
 
@@ -72,9 +83,7 @@ var yuidocTree = yuidoc('packages', {
     "url": "https://github.com/emberjs/data",
     "options": {
       "paths": [
-        "packages/ember-dialog/lib",
-        // "packages/activemodel-adapter/lib",
-        // "packages/ember-inflector/addon"
+        "packages/ember-dialog/lib"
       ],
       "exclude": "vendor",
       "outdir":   "docs/build"
@@ -101,9 +110,7 @@ function packageAddon(packagePath, vendorPath) {
 }
 
 var packages = merge([
-  packageAddon('ember-inflector', 'node_modules/'),
   package('ember-dialog'),
-  // package('activemodel-adapter'),
   package('ember')
 ]);
 
@@ -124,7 +131,6 @@ if (env === 'production') {
 
 var testFiles = merge([
   testTree('ember-dialog'),
-  // testTree('activemodel-adapter')
 ]);
 
 if (env === 'production'){
@@ -134,7 +140,7 @@ if (env === 'production'){
 testFiles = concat(testFiles, {
   inputFiles: ['**/*.js'],
   separator: '\n',
-  wrapInEval: true,
+  // wrapInEval: true,
   wrapInFunction: true,
   outputFile: '/ember-dialog-tests.js'
 });

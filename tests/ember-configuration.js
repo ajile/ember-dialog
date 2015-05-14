@@ -46,59 +46,6 @@
     setTimeout(async(callback, timeout+100), timeout);
   };
 
-  window.setupStore = function(options) {
-    var container, registry;
-    var env = {};
-    options = options || {};
-
-    if (Ember.Registry) {
-      registry = env.registry = new Ember.Registry();
-      container = env.container = registry.container();
-    } else {
-      container = env.container = new Ember.Container();
-      registry = env.registry = container;
-    }
-
-    env.replaceContainerNormalize = function replaceContainerNormalize(fn) {
-      if (env.registry) {
-        env.registry.normalize = fn;
-      } else {
-        env.container.normalize = fn;
-      }
-    }
-
-    // var adapter = env.adapter = (options.adapter || DS.Adapter);
-    // delete options.adapter;
-
-    // for (var prop in options) {
-    //   registry.register('model:' + prop, options[prop]);
-    // }
-
-    // registry.register('store:main', DS.Store.extend({
-    //   adapter: adapter
-    // }));
-
-    // registry.optionsForType('serializer', { singleton: false });
-    // registry.optionsForType('adapter', { singleton: false });
-
-    // registry.register('serializer:-default', DS.JSONSerializer);
-    // registry.register('serializer:-rest', DS.RESTSerializer);
-    // registry.register('adapter:-rest', DS.RESTAdapter);
-
-    // registry.injection('serializer', 'store', 'store:main');
-
-    env.serializer = container.lookup('serializer:-default');
-    env.restSerializer = container.lookup('serializer:-rest');
-    env.store = container.lookup('store:main');
-    env.adapter = env.store.get('defaultAdapter');
-
-    return env;
-  };
-
-  window.createStore = function(options) {
-    return setupStore(options).store;
-  };
-
   QUnit.begin(function(){
     Ember.RSVP.configure('onerror', function(reason) {
       // only print error messages if they're exceptions;
@@ -109,21 +56,6 @@
         throw reason;
       }
     });
-
-    // var transforms = {
-    //   'boolean': DS.BooleanTransform.create(),
-    //   'date': DS.DateTransform.create(),
-    //   'number': DS.NumberTransform.create(),
-    //   'string': DS.StringTransform.create()
-    // };
-
-    // // Prevent all tests involving serialization to require a container
-    // DS.JSONSerializer.reopen({
-    //   transformFor: function(attributeType) {
-    //     return this._super(attributeType, true) || transforms[attributeType];
-    //   }
-    // });
-
   });
 
   // Generate the jQuery expando on window ahead of time

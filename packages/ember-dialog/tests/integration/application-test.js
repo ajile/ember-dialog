@@ -7,7 +7,7 @@ var registry, container;
 var setupContainer = Dialog._setupContainer;
 var EmberObject = Ember.Object;
 
-module("integration/setup-container - Setting up a container", {
+module("integration/application", {
   setup: function() {
     if (Registry) {
       registry = new Registry();
