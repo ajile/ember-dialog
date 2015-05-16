@@ -95,6 +95,12 @@ Manager = Service.extend(Ember.Evented, {
     return this._super.apply(this, arguments);
   },
 
+  reset: function () {
+    this.dialogsList = [];
+    this._dialogs = Ember.Object.create();
+    return this._super.apply(this, arguments);
+  },
+
   /**
     Alert-dialog window. Contains predefined 1 button.
 
@@ -455,7 +461,7 @@ Manager = Service.extend(Ember.Evented, {
       Ember.ENV.LOG_DIALOG && Ember.Logger.warn('%cDialogManager:%c The dialog named %s not found', 'font-weight: 900;', null, name);
       return this;
     }
-    var name = dialog.get('name');
+    name = dialog.get('name');
     Ember.ENV.LOG_DIALOG && Ember.Logger.log('%cDialogManager:%c Destroying %s', 'font-weight: 900;', null, dialog.get('name'));
     // Eliminate dialog
     dialog.destroy();

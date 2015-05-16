@@ -6,14 +6,17 @@ module("integration/dialogs", {
   setup: function() {
     app = startApp();
     manager = app.registry.lookup('dialog:manager');
+
+    run(manager, manager.reset);
+
     console.log("AFTER CREATE:", manager.dialogsList.length);
     console.log("AFTER CREATE OBJ:", manager);
   },
   teardown: function() {
-    // run(app, app.destroy);
-    run(manager, manager.destroy);
-    console.log("AFTER DESTR:", manager.dialogsList.length);
-    console.log("AFTER DESTR OBJ:", manager);
+    run(app, app.destroy);
+    // run(manager, manager.destroy);
+    Ember.Logger.log("AFTER DESTR:", manager.dialogsList.length);
+    Ember.Logger.log("AFTER DESTR OBJ:", manager);
   }
 });
 
