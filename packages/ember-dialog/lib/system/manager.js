@@ -91,7 +91,6 @@ Manager = Service.extend(Ember.Evented, {
       dialog = this.get('_dialogs').get(name);
       this._destroyDialog(name);
     }
-    console.info(this.get('dialogsList'));
     return this._super.apply(this, arguments);
   },
 
