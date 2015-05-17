@@ -24,7 +24,7 @@
     "build:production": "ember build --environment=production",
     "prepublish": "bower install && npm run-script build:production",
     "start": "ember serve",
-    "test": "jscs packages && testem -R dot ci",
+    "test": "npm run-script build:production && npm run-script test:local",
     "test:local": "testem -R dot ci",
     "test:beta": "testem -f config/testem-beta.json -R dot ci",
     "test:canary": "testem -f config/testem-canary.json -R dot ci",
