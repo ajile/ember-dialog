@@ -468,8 +468,6 @@ Manager = Service.extend(Ember.Evented, {
     delete dialogs[name];
     var dialogsList = this.get('dialogsList');
     this.set('dialogsList', dialogsList.without(name));
-    console.log(',,,,', this.get('_dialogs'));
-    console.log(',,,,', this.get('dialogsList'));
     return this;
   },
 

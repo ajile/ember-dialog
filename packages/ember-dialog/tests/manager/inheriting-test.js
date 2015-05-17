@@ -2,7 +2,7 @@
 
 var run = Ember.run, manager, app;
 
-module("integration/dialogs/custom", {
+module("manager/inheriting", {
   setup: function() {
     app = startApp();
     manager = app.registry.lookup('dialog:manager');
@@ -14,10 +14,6 @@ module("integration/dialogs/custom", {
   }
 });
 
-test("The dialog manager's method exists.", function() {
-  ok(Ember.typeOf(manager.custom) === "function", "the dialog manager has method");
-});
-
-test("The dialog has no buttons onboard", function() {
-  ok(true, "the dialog doesn't have buttons at all");
+test("Test keeper", function() {
+  ok(true, "placeholder");
 });

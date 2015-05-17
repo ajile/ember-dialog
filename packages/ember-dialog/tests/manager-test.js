@@ -2,7 +2,7 @@
 
 var run = Ember.run, manager, app;
 
-module("integration/common", {
+module("manager", {
   setup: function() {
     app = startApp();
     manager = app.registry.lookup('dialog:manager');

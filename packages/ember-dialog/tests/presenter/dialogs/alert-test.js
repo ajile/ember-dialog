@@ -2,7 +2,7 @@
 
 var run = Ember.run, manager, app;
 
-module("integration/dialogs/confirm", {
+module("presenter/dialogs/alert", {
   setup: function() {
     app = startApp();
     manager = app.registry.lookup('dialog:manager');
@@ -15,9 +15,9 @@ module("integration/dialogs/confirm", {
 });
 
 test("The dialog manager's method exists.", function() {
-  ok(Ember.typeOf(manager.confirm) === "function", "the dialog manager has method");
+  ok(Ember.typeOf(manager.alert) === "function", "the dialog manager has method");
 });
 
-test("The dialog has 2 onboard buttons: accept and decline", function() {
+test("The dialog has just 1 onboard accept-button", function() {
   ok(true, "the dialog has buttons its need");
 });

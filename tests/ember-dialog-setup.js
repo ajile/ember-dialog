@@ -49,5 +49,6 @@
   }
 
   window.startApp = startApp;
+  window.Resolver = Resolver;
 
 })();

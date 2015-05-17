@@ -6,8 +6,9 @@ var Presenter = Dialog.Presenter;
 var registry, container;
 var setupContainer = Dialog._setupContainer;
 var EmberObject = Ember.Object;
+var Resolver = window.Resolver;
 
-module("integration/application", {
+module("integration", {
   setup: function() {
     if (Registry) {
       registry = new Registry();
@@ -36,4 +37,11 @@ test("If a dialog manager is instantiated, it should be made available to each c
 
 test("The dialog presenter should be registered into a container.", function() {
   ok(container.lookup('dialog:presenter') instanceof Presenter, "the dialog presenter is instantiated");
+});
+
+test("The base templates of the dialog should be available.", function() {
+  try {
+    require('ember-dialog/templates/dialog');
+    ok(true, "the base layout template is found");
+  } catch (e) {}
 });
