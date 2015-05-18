@@ -16,19 +16,19 @@
       //   }
       // }
 
-      if (Ember && Ember.TEMPLATES) {
-        var templateNames = [], name;
-        for (name in Ember.TEMPLATES) {
-          if (Ember.TEMPLATES[name] != null) {
-            templateNames.push(name);
-          }
-        }
+      // if (Ember && Ember.TEMPLATES) {
+      //   var templateNames = [], name;
+      //   for (name in Ember.TEMPLATES) {
+      //     if (Ember.TEMPLATES[name] != null) {
+      //       templateNames.push(name);
+      //     }
+      //   }
 
-        if (templateNames.length > 0) {
-          deepEqual(templateNames, [], "Ember.TEMPLATES should be empty");
-          Ember.TEMPLATES = {};
-        }
-      }
+      //   if (templateNames.length > 0) {
+      //     deepEqual(templateNames, [], "Ember.TEMPLATES should be empty");
+      //     Ember.TEMPLATES = {};
+      //   }
+      // }
     };
 
    window.globalFailedTests  = [];

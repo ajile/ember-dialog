@@ -45,7 +45,6 @@ test("The dialog manager should have one dialog after creation and zero after cl
 
 });
 
-
 test("The dialog manager should have 2 dialogs after creation 2 dialogs.", function() {
 
   run(function() {
@@ -56,11 +55,6 @@ test("The dialog manager should have 2 dialogs after creation 2 dialogs.", funct
     });
   });
 
-});
-
-test("Checking of the dialog window closing sequence", function() {
-  ok(true, "the last one dialog window closes first");
-  ok(true, "the first one dialog window closes last");
 });
 
 test("The dialog take options passed to a manager on creation.", function() {
@@ -78,4 +72,113 @@ test("The dialog take options passed to a manager on creation.", function() {
     });
   });
 
+});
+
+test("The dialog manager shouldn't contain any dialogs after closeAll operation.", function() {
+  run(function() {
+    manager.alert("Some template goes here");
+    manager.alert("Some template goes here");
+    manager.alert("Some template goes here");
+    manager.alert("Some template goes here");
+    run.scheduleOnce('afterRender', this, function() {
+      manager.closeAll();
+      ok(Ember.isEmpty(manager.dialogsList), "the dialog doesn't have any dialog created");
+    });
+  });
+});
+
+test("The dialog should create instances on its own.", function() {
+  run(function() {
+    manager.alert("Some template goes here", null);
+    run.scheduleOnce('afterRender', this, function() {
+      var dialog = manager.getDialog(manager.get('active'));
+      ok(Ember.typeOf(dialog.controller) === "instance", "the dialog created controller");
+      ok(Ember.typeOf(dialog.body) === "class", "the dialog created view");
+    });
+  });
+});
+
+test("The dialog should place a plain text into body.", function() {
+  run(function() {
+    var text = "Text for test";
+    manager.alert(text);
+    run.scheduleOnce('afterRender', this, function() {
+      var dialog = manager.getDialog(manager.get('active'));
+      var bodyText = dialog.$('.dialog-body').text().trim();
+      ok(bodyText === text, "the dialog contain plain text in it");
+    });
+  });
+});
+
+test("The dialog should place a html into body.", function() {
+  run(function() {
+    var text = "<b>Text for test</b>";
+    manager.alert(text);
+    run.scheduleOnce('afterRender', this, function() {
+      var dialog = manager.getDialog(manager.get('active'));
+      var bodyText = dialog.$('.dialog-body').html().trim();
+      ok(bodyText === text, "the dialog contain plain text in it");
+    });
+  });
+});
+
+test("The dialog should work with a templates.", function() {
+  run(function() {
+    var templatePath = "test-template";
+    var text = 'TEST';
+    Ember.TEMPLATES[templatePath] = Ember.Handlebars.compile(text);
+    manager.alert(templatePath);
+    run.scheduleOnce('afterRender', this, function() {
+      delete Ember.TEMPLATES[templatePath];
+      var dialog = manager.getDialog(manager.get('active'));
+      var bodyText = dialog.$('.dialog-body').text().trim();
+      ok(bodyText === text, "the dialog contain template's text in it");
+    });
+  });
+});
+
+test("The dialog should work with a dynamically parts of template.", function() {
+  run(function() {
+    var templatePath = "test-template";
+    var text = 'The title is: {{view.dialog.title}}';
+    Ember.TEMPLATES[templatePath] = Ember.Handlebars.compile(text);
+    manager.alert(templatePath, null, {title: 'aaa'});
+    run.scheduleOnce('afterRender', this, function() {
+      var dialog = manager.getDialog(manager.get('active'));
+      var bodyText = dialog.$('.dialog-body').text().trim();
+      ok(bodyText === "The title is: aaa", "the dialog contain variables from the dialog component");
+      delete Ember.TEMPLATES[templatePath];
+    });
+  });
+});
+
+test("The dialog should has the controller's data", function() {
+  run(function() {
+    var templatePath = "test-template";
+    var text = "var 1: {{variable_one}}; var 2: {{variable_two}}";
+    Ember.TEMPLATES[templatePath] = Ember.Handlebars.compile(text);
+    manager.alert(templatePath, Ember.Controller.create({variable_one: 111, variable_two: 222}));
+    run.scheduleOnce('afterRender', this, function() {
+      var dialog = manager.getDialog(manager.get('active'));
+      var bodyText = dialog.$('.dialog-body').text().trim();
+      ok(bodyText === "var 1: 111; var 2: 222", "the dialog contain variables from controller");
+      delete Ember.TEMPLATES[templatePath];
+    });
+  });
+});
+
+test("The active dialog sets right", function() {
+  run(function() {
+    var dialog_1, dialog_2;
+    manager.alert("Dialog window 1");
+    dialog_1 = manager.get('active');
+    manager.alert("Dialog window 1");
+    dialog_2 = manager.get('active');
+    run.scheduleOnce('afterRender', this, function() {
+      ok(dialog_2 === manager.get('active'), "the active dialog sets right after creating another one");
+      var dialog = manager.getDialog(dialog_2);
+      dialog.close();
+      ok(dialog_1 === manager.get('active'), "the active dialog sets right after closing another one");
+    });
+  });
 });

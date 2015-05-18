@@ -21,14 +21,14 @@
   function startApp(attrs) {
     var App;
 
-    Ember.ENV.LOG_DIALOG = true;
+    Ember.ENV.LOG_DIALOG = false;
 
     var attributes = Ember.merge({
       // useful Test defaults
       rootElement: '#ember-testing',
       LOG_ACTIVE_GENERATION:false,
       LOG_VIEW_LOOKUPS: false,
-      LOG_DIALOG: true,
+      LOG_DIALOG: false,
       modulePrefix: 'ember-dialog',
       Resolver: Resolver
     }, attrs); // but you can override;

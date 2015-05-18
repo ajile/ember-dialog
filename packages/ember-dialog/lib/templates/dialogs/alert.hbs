@@ -1,13 +1,10 @@
 <div class="dialog-header">
-    <button type="button" class="close" {{action dialog.acceptHandlerName dialog}}>×</button>
-    <div class="dialog-title">{{ dialog.title }}</div>
+    <button type="button" class="close" {{action view.dialog.acceptHandlerName view.dialog}}>×</button>
+    <div class="dialog-title">{{ view.dialog.title }}</div>
 </div>
 <div class="dialog-body">
     {{yield}}
 </div>
 <div class="dialog-footer">
-    -={{this.dialog.acceptHandlerName}}=-
-    -={{this}}=-
-    -={{controller}}=-
-    <button {{bind-attr class=":btn dialog.acceptClass"}} type="button" {{action dialog.acceptHandlerName dialog}}>{{dialog.acceptLabel}}</button>
+    <button {{bind-attr class=":btn view.dialog.acceptClass"}} type="button" {{action view.dialog.acceptHandlerName view.dialog}}>{{view.dialog.acceptLabel}}</button>
 </div>

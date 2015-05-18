@@ -81,6 +81,13 @@ Manager = Service.extend(Ember.Evented, {
   */
   _dialogs: Ember.Object.create(),
 
+  /**
+    Destroys all created dialogs. Mat be useful to get rid of all opened
+    dialogs. This method calls `destroy` method of each created dialog in the
+    list.
+
+    @method destroy
+  */
   destroy: function() {
     Ember.ENV.LOG_DIALOG && Ember.Logger.log('%cDialogManager:%c Destroying!', 'font-weight: 900;', null);
     var dialogList = this.get('dialogsList'), name, dialog;
@@ -94,6 +101,11 @@ Manager = Service.extend(Ember.Evented, {
     return this._super.apply(this, arguments);
   },
 
+  /**
+    Flushes dialog list and list of the dialogs was created, returns targets
+    to the controllers then remove them from the list.
+    @method reset
+  */
   reset: function () {
     this.dialogsList = [];
     this._dialogs = Ember.Object.create();
@@ -408,6 +420,15 @@ Manager = Service.extend(Ember.Evented, {
     }));
   },
 
+  closeAll: function() {
+    var dialogList = this.get('dialogsList');
+    for(var i in dialogList) {
+      if (!dialogList.hasOwnProperty(i)) { continue; }
+      if (Ember.isBlank(dialogList[i])) { continue; }
+      this.close(dialogList[i]);
+    }
+  },
+
   /**
     Returns the modal by the name.
 
@@ -491,7 +512,7 @@ Manager = Service.extend(Ember.Evented, {
       // template's path it's a template itself.
       template = template || Ember.Handlebars.compile(view);
       // Creating a view by template.
-      view = Ember.View.extend({ template: template, controller: controller });
+      view = Ember.View.extend({ template: template, controller: controller});
     } else if (Ember.typeOf(view) === 'class') {
       view = Ember.copy(view);
       view = Ember.View.extend({ controller: controller });

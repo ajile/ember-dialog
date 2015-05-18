@@ -1,27 +1,29 @@
 /* jshint node: true */
 
-var es6             = require('broccoli-es6-module-transpiler');
-var AMDFormatter    = require('es6-module-transpiler-amd-formatter');
-var PackageResolver = require('es6-module-transpiler-package-resolver');
-var concat          = require('broccoli-concat');
-var uglify          = require('broccoli-uglify-js');
-var es3SafeRecast   = require('broccoli-es3-safe-recast');
-var env             = process.env.EMBER_ENV;
-var amdBuild        = require('./lib/amd-build');
-var pickFiles       = require('broccoli-static-compiler');
-var merge           = require('broccoli-merge-trees');
-var moveFile        = require('broccoli-file-mover');
-var wrap            = require('broccoli-wrap');
-var jshint          = require('broccoli-jshint');
-var defeatureify    = require('broccoli-defeatureify');
-var version         = require('git-repo-version')(10);
-var yuidoc          = require('broccoli-yuidoc');
-var replace         = require('broccoli-replace');
-var stew            = require('broccoli-stew');
-var path            = require('path');
-var fs              = require('fs');
-var jscsTree        = require('broccoli-jscs');
+var es6                   = require('broccoli-es6-module-transpiler');
+var AMDFormatter          = require('es6-module-transpiler-amd-formatter');
+var PackageResolver       = require('es6-module-transpiler-package-resolver');
+var concat                = require('broccoli-concat');
+var uglify                = require('broccoli-uglify-js');
+var es3SafeRecast         = require('broccoli-es3-safe-recast');
+var env                   = process.env.EMBER_ENV;
+var amdBuild              = require('./lib/amd-build');
+var pickFiles             = require('broccoli-static-compiler');
+var merge                 = require('broccoli-merge-trees');
+var moveFile              = require('broccoli-file-mover');
+var wrap                  = require('broccoli-wrap');
+var jshint                = require('broccoli-jshint');
+var defeatureify          = require('broccoli-defeatureify');
+var version               = require('git-repo-version')(10);
+var yuidoc                = require('broccoli-yuidoc');
+var replace               = require('broccoli-replace');
+var stew                  = require('broccoli-stew');
+var path                  = require('path');
+var fs                    = require('fs');
+var jscsTree              = require('broccoli-jscs');
 var EmberTemplateCompiler = require('./bower_components/ember/ember-template-compiler');
+var HtmlbarsCompiler      = require('ember-cli-htmlbars');
+var templateCompiler      = require('broccoli-ember-hbs-template-compiler')
 
 function minify(tree, name){
   var config = require('./config/ember-defeatureify');
@@ -114,16 +116,43 @@ var packages = merge([
   package('ember')
 ]);
 
-var globalBuild;
+var globalBuild, templateTree;
 
 // Bundle formatter for smaller payload
 if (env === 'production') {
+
+  /**
+    The method is redefined to make building templates into Ember's TEMPLATES namespace,
+    where they will be found by default Ember's template resolver.
+  */
+  HtmlbarsCompiler.prototype.processString = function (string, relativePath) {
+    // Getting the pure path to the template
+    var path = relativePath.replace('ember-dialog/templates/', '').replace('.hbs', '');
+
+    // Build the template by HTMLBar builder and put the result into Ember's namespace.
+    return 'Ember.TEMPLATES["' + path + '"] = Ember.HTMLBars.template(' + this.precompile(string, { moduleName: relativePath }) + ');';
+  };
+
+  templateTree = pickFiles('packages/ember-dialog/lib', {
+    srcDir: '/templates/',
+    files: ['**/*.hbs'],
+    destDir: '/ember-dialog/templates/'
+  });
+
+  templateTree = new HtmlbarsCompiler(templateTree, {
+    isHTMLBars: true,
+    templateCompiler: EmberTemplateCompiler
+  });
+
+  packages = merge([packages, templateTree], {overwrite: true});
+
   globalBuild = es6(packages, {
     inputFiles: ['ember-dialog'],
     output: '/ember-dialog.js',
     resolvers: [PackageResolver],
     formatter: 'bundle'
   });
+
 } else {
 // Use AMD for faster rebuilds in dev
   globalBuild = amdBuild(packages, EmberTemplateCompiler);

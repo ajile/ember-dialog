@@ -1,6 +1,6 @@
 /* globals ENV, QUnit */
 
-(function (){
+;(function (){
   window.Ember = window.Ember || {};
 
   Ember.config = {};
