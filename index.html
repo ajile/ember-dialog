@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>ember-dialog Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">ember-dialog</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-ember-dialog_components_presenter.html">ember-dialog/components/presenter</a></li><li><a href="module-ember-dialog_mixins_context.html">ember-dialog/mixins/context</a></li><li><a href="module-ember-dialog_services_dialog.html">ember-dialog/services/dialog</a></li><li><a href="module-ember-dialog_utils_zindex.html">ember-dialog/utils/zindex</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="events.list.html" class="dropdown-toggle" data-toggle="dropdown">Events<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-ember-dialog_components_presenter.html#~event:accepted">ember-dialog/components/presenter~event:accepted</a></li><li><a href="module-ember-dialog_components_presenter.html#~event:declined">ember-dialog/components/presenter~event:declined</a></li><li><a href="module-ember-dialog_components_presenter.html#~event:didRender">ember-dialog/components/presenter~event:didRender</a></li><li><a href="module-ember-dialog_services_dialog.html#~event:destroyed">ember-dialog/services/dialog~event:destroyed</a></li><li><a href="module-ember-dialog_services_dialog.html#~event:created">ember-dialog/services/dialog~event:created</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="external-Ember_RSVP_Promise.html">Ember/RSVP/Promise</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+		<div class="col-sm-3 col-md-3">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><h1>ember-dialog</h1><p>Old version (ember-cli-dialog and ember-dialog below v2) outdated and will not be supported.</p>
+<h2>Installation</h2><p>Installing the library is as easy as:</p>
+<pre class="prettyprint source lang-shell"><code>ember install ember-dialog</code></pre><h2>About</h2><p><img align="right" src="http://dl2.joxi.net/drive/2016/07/14/0007/2363/473403/03/5f20c42c19.png"></p>
+<p>An Ember Addon that able you to easily create dialog windows and control their closing. It consists of a service that is available from any object and a component which is a dialog-window itself.</p>
+<p>The principle of work is simple. Service is instructed to display a modal window (<code>show</code>, <code>alert</code>, <code>confirm</code> or <code>blank</code> methods), by which creates a component instance with required layout and template, renders it, and then attaches to the body. At this point, it also creates the Promise, &quot;handles&quot; which are placed in the component object and returns it. The component has on aboard 2 actions: one for <code>resolved</code> closing, another one for <code>rejected</code> closing. Actions available within the template and can be called, for instance by clicking on the button (in the layout or in the template). When you call the action is executed one of the Promise methods and triggering independent &quot;accepted&quot; or &quot;declined&quot; event. Listening this events the dialog sevice distroying component object and dettach it from the DOM.</p>
+<p>Let's say you want to ask user confirm an action. You should call <code>show</code> method of the dialog service with a layout path (you needed dialog window with two buttons - <code>confirm</code> layout what you need) and a path to template that you want to show in the modal window. Method creates and shows dialog window and returns a Promise, that will become resolved or rejected when window will be closed, depended on which button user clicked.</p>
+<pre class="prettyprint source lang-javascript"><code>// The `dialog/confirm` - predefined layout template
+// The `messages/hello` - template that you'd like to show.
+// Notice: this template should be found in your project by path `app/templates/messages/hello`
+const layoutName = &quot;dialog/confirm&quot;;
+const templateName = &quot;messages/hello&quot;;
+const promise = this.get(&quot;dialog&quot;).show(layoutName, templateName);
+
+const yes = () => { console.log(`yes pressed`); };
+const no = () => { console.log(`no pressed`); };
+
+promise.then(yes, no);</code></pre><h2>Dialog types (predefined layouts)</h2><p>ember-dialog has next layouts on aboard: <code>alert</code>, <code>confirm</code> and <code>blank</code>.</p>
+<h3>Alert</h3><p>This layout has only 'yes' - button clicking on which the modal window closes as <code>resolved</code>. It also has X-button which closes modal window as <code>resolved</code>. The <code>promise</code> object always resolved on modal closing. May be used for showing an information to the user. See <a href="http://ajile.github.io/ember-dialog/module-ember-dialog_services_dialog.html#-inner-alert__anchor">docs</a>.</p>
+<h3>Confirm</h3><p>In practice, the most widely used layout. It has 2 buttons, which closes dialog window. One of them closes window as <code>resolved</code>, another one closes as <code>rejected</code>. It also has X-button which closes window as <code>rejected</code> (for obvious reasons). See <a href="http://ajile.github.io/ember-dialog/module-ember-dialog_services_dialog.html#-inner-confirm__anchor">docs</a>.</p>
+<h3>Blank</h3><p>The most simple layout. It has nothing on aboard. May be used for creating custom dialog windows with its own logic of showing elements and closing. In practice often used for showing forms, in this cases accept closing carried on submit action. Convenient to use in conjunction with ember-validation (TBD:Usecase). See <a href="http://ajile.github.io/ember-dialog/module-ember-dialog_services_dialog.html#-inner-blank__anchor">docs</a>.</p>
+<h2>Styles</h2><p>Styles were written on sass language, you're able to include them into you project.</p>
+<p>Add path to <code>sassOptions.includePaths</code> in your <code>ember-cli-build.js</code>:</p>
+<pre class="prettyprint source lang-javascript"><code>var app = new EmberApp(defaults, {
+  sassOptions: {
+    includePaths: [ 'node_modules/ember-dialog/addon/styles' ]
+  }
+});</code></pre><p>Include them in your <code>app/styles/app.scss</code>:</p>
+<pre class="prettyprint source lang-sass"><code>@import &quot;ember-dialog&quot;;</code></pre><h2>Usage</h2><h3>Showing user a simple message</h3><pre class="prettyprint source lang-javascript"><code>export default Ember.Controller({
+
+  showDialog() {
+    // Will be used `app/templates/error-message.hbs`
+    this.get(&quot;dialog&quot;).alert(&quot;error-message&quot;);
+  }
+
+});</code></pre><h3>Showing user a simple message to confirm action</h3><pre class="prettyprint source lang-javascript"><code>export default Ember.Controller({
+
+  showDialog() {
+
+    const yes = () => { console.log(&quot;Yes&quot;); };
+    const no = () => { console.log(&quot;No&quot;); };
+
+    // Will be used `app/templates/messages/are-you-sure.hbs`
+    this.get(&quot;dialog&quot;).confirm(&quot;messages/are-you-sure&quot;).then(yes, no);
+
+  }
+
+});</code></pre><h3>Binding data in the dialog</h3><p>Controller:</p>
+<pre class="prettyprint source lang-javascript"><code>export default Ember.Controller({
+
+  now: now Date(),
+
+  model: { username: &quot;ajile&quot; },
+
+  showDialog() {
+
+    // Will be used `app/templates/messages/hello.hbs`
+    this.get(&quot;dialog&quot;).alert(&quot;messages/hello&quot;, this);
+
+  }
+
+});</code></pre><p>Template <code>messages/hello.hbs</code>:</p>
+<pre class="prettyprint source lang-handlebar"><code>&lt;div>Hello, {{contextObject.model.username}}! Now: {{contextObject.now}}. Click &lt;button onclick={{action &quot;accept&quot;}}>the button&lt;/button> to close the dialog.&lt;/div></code></pre><h3>Interrupt closing of the dialog window</h3><pre class="prettyprint source lang-javascript"><code>export default Ember.Controller({
+
+  count: 0,
+
+  showDialog() {
+    // Will be used `app/templates/messages/click-counter.hbs`
+    this.get(&quot;dialog&quot;).alert(&quot;messages/click-counter&quot;, null, {
+      acceptHandler: &quot;yesHandler&quot;
+    });
+  },
+
+  actions: {
+    yesHandler(presenter) {
+      const count = this.get(&quot;count&quot;);
+      if (count &lt; 5) {
+        console.log(&quot;Count less then five&quot;);
+        this.set(&quot;count&quot;, ++count);
+      } else {
+        presenter.accept();
+      }
+    }
+  }
+
+});</code></pre><h3>Manual closing dialog window</h3><pre class="prettyprint source lang-javascript"><code>export default Ember.Controller({
+
+  showDialog() {
+
+    // Any created dialog will be closed in 1s
+    this.get(&quot;dialog&quot;).on(&quot;created&quot;, (presenter) => {
+      Ember.run.later(presenter, presenter.accept, 1000);
+    });
+
+    // Will be used `app/templates/messages/something.hbs`
+    this.get(&quot;dialog&quot;).alert(&quot;messages/something&quot;);
+
+  }
+
+});</code></pre><h3>Creating new layouts</h3><p>Controller:</p>
+<pre class="prettyprint source lang-javascript"><code>export default Ember.Controller({
+
+  showDialog() {
+    // Will be used `app/templates/dialog-layouts/delete.hbs` as layout and
+    // `app/templates/messages/are-you-sure.hbs` as template.
+    this.get(&quot;dialog&quot;).show(&quot;dialog-layouts/delete&quot;, &quot;messages/delete-user&quot;);
+  }
+
+});</code></pre><p>Template <code>dialog-layouts/delete.hbs</code>:</p>
+<pre class="prettyprint source lang-handlebar"><code>&lt;h1 style=&quot;color: #F00;&quot;>Confirm Deletion&lt;/h1>
+&lt;div class=&quot;body&quot;>
+  {{yield}}
+&lt;/div>
+&lt;button class=&quot;danger&quot; onclick={{action &quot;accept&quot;}}>DELETE!&lt;/button>
+&lt;button onclick={{action &quot;decline&quot;}}>Cancel&lt;/button></code></pre><p>Template <code>messages/delete-user.hbs</code>:</p>
+<pre class="prettyprint source lang-handlebar"><code>Really?</code></pre><p>The result:</p>
+<pre class="prettyprint source lang-html"><code>&lt;h1 style=&quot;color: #F00;&quot;>Confirm Deletion&lt;/h1>
+&lt;div class=&quot;body&quot;>
+  Really?
+&lt;/div>
+&lt;button class=&quot;danger&quot; onclick=&quot;function(){...}&quot;>DELETE!&lt;/button>
+&lt;button onclick=&quot;function(){...}&quot;>Cancel&lt;/button></code></pre><h3>Extend dialog manager</h3><p>Execute <code>ember g service dialog</code>.</p>
+<p>File <code>app/services/dialog.js</code>:</p>
+<pre class="prettyprint source lang-javascript"><code>import Dialog from &quot;ember-dialog/services/dialog&quot;;
+
+export default Dialog.extend({
+
+  confirmDelete() {
+    const args = Array.prototype.slice.apply(arguments);
+    args.unshift(&quot;dialog-layouts/delete&quot;);
+    this.show(...args);
+  }
+
+});</code></pre></article>
+    </section>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+<div class="modal fade" id="searchResults">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Search results</h4>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
+
+<footer>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 2016-07-14T18:12:37+03:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+<script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			var id = $( heading ).attr( "id" );
+			return id && id.replace(/\~/g, '-inner-').replace(/\./g, '-static-') || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		SearcherDisplay.init();
+	});
+</script>
+
+</body>
+</html>
